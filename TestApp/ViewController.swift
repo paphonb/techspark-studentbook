@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     
     var ref: DatabaseReference!
     var studentList: [Student] = []
+    
+    var resultsController: StudentSearchResultsController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,8 +27,15 @@ class ViewController: UIViewController {
         fetchFirebase()
         
         if (traitCollection.forceTouchCapability == .available) {
-            registerForPreviewing(with: self, sourceView: view)
+            registerForPreviewing(with: self, sourceView: tableView)
         }
+        
+        resultsController = storyboard?.instantiateViewController(withIdentifier: "ref_searchStudents") as? StudentSearchResultsController
+        
+        let search = UISearchController(searchResultsController: resultsController)
+        search.searchResultsUpdater = resultsController
+        definesPresentationContext = true
+        navigationItem.searchController = search
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,7 +43,9 @@ class ViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        fetchFirebase()
+        if let index = tableView.indexPathForSelectedRow{
+            tableView.deselectRow(at: index, animated: true)
+        }
     }
     
     // Function when add new item button is clicked
@@ -54,6 +65,7 @@ class ViewController: UIViewController {
                 }
             }
             self.studentList = newItem
+            self.resultsController?.updateStudentList(newList: newItem)
             self.tableView.reloadData()
             self.loadingIndicator.stopAnimating()
         })
@@ -140,5 +152,3 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate, UIViewCont
     }
     
 }
-
-

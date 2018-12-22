@@ -19,12 +19,15 @@ class PersonalViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         fetchFirebase()
     }
     
     // Attach Firebase listener to this screen, monitoring for value changes
     private func fetchFirebase() {
-        studentItem?.ref?.observe(.value, with: { (snapshot) in
+        studentItem?.ref?.observeSingleEvent(of: .value, with: { (snapshot) in
             if (snapshot.value != nil) {
                 self.studentItem = Student(snapshot: snapshot)
                 self.tableView.reloadData()
