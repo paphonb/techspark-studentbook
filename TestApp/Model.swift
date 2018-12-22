@@ -81,3 +81,10 @@ class Student {
         return URL(string: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")!
     }
 }
+
+extension Student: Equatable {
+    static func == (lhs: Student, rhs: Student) -> Bool {
+        return
+            lhs.values == rhs.values
+    }
+}

@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
+import Differ
 
 class ViewController: UIViewController {
     
@@ -64,9 +65,10 @@ class ViewController: UIViewController {
                     newItem.append(item)
                 }
             }
+            let oldList = self.studentList
             self.studentList = newItem
             self.resultsController?.updateStudentList(newList: newItem)
-            self.tableView.reloadData()
+            self.tableView.animateRowChanges(oldData: oldList, newData: self.studentList)
             self.loadingIndicator.stopAnimating()
         })
     }

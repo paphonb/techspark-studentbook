@@ -9,5 +9,5 @@ target 'TestApp' do
   pod 'Firebase/Core'
   pod 'Firebase/Database'
   pod 'AlamofireImage'
-
+  pod 'Differ'
 end
