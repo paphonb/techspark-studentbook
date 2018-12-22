@@ -41,3 +41,43 @@ class Grocery {
     }
     
 }
+
+class Student {
+    
+    var ref: DatabaseReference?
+    var values: [String: String] = [:]
+    
+    init() {
+        self.ref = nil
+    }
+    
+    init?(snapshot: DataSnapshot) {
+        self.values = snapshot.value as! [String:String]
+        self.ref = snapshot.ref
+    }
+    
+    func getFullName() -> String {
+        return "\(values["name"] ?? "") \(values["surname"] ?? "")"
+    }
+    
+    func toDictionary() -> Any {
+        return values
+    }
+    
+    func save() {
+        if (ref != nil) {
+            ref?.updateChildValues(values)
+        } else {
+            Database.database().reference(withPath: "students").childByAutoId().setValue(values)
+        }
+    }
+    
+    func getImageURL() -> URL {
+        if let urlString = values["imageURL"] {
+            if let url = URL(string: urlString) {
+                return url
+            }
+        }
+        return URL(string: "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")!
+    }
+}

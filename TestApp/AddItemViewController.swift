@@ -15,55 +15,59 @@ class AddItemViewController: UIViewController {
     @IBOutlet weak var ui_title: UITextField!
     @IBOutlet weak var ui_subtitle: UITextField!
     @IBOutlet weak var ui_imageURL: UITextField!
-    @IBOutlet weak var ui_button: UIButton!
+    
+    @IBOutlet weak var doneButton: UIBarButtonItem!
     
     // Identify if it is editing screen
     var isEdit: Bool?
-    var groceryItem: Grocery?
+    var studentItem: Student?
     
-    let ref = Database.database().reference(withPath: "grocery-items")
+    let ref = Database.database().reference(withPath: "students")
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // If it is editing screen, change the corresponding words
         if let edit = isEdit, edit {
-            self.title = "Edit Item"
-            ui_button.setTitle("Update", for: .normal)
-            if let item = groceryItem {
-                ui_title.text = item.title
-                ui_subtitle.text = item.subtitle
+            self.title = "Edit Student"
+            /*
+            if let item = studentItem {
+                ui_title.text = item.name
+                ui_subtitle.text = item.surname
                 ui_imageURL.text = item.imageURL
             }
+ */
         // If it is not editing, just only set navigation title text
         } else {
-            self.title = "Add Item"
+            self.title = "New Student"
         }
     }
     
-    // Function to do when button is pressed
-    @IBAction func buttonPressed(_ sender: UIButton) {
-        
+    @IBAction func donePressed(_ sender: Any) {
         // Get user's input and validate the input
         guard let
             title = ui_title.text,
             let subtitle = ui_subtitle.text,
             let imageURL = ui_imageURL.text,
             title != "", subtitle != "", imageURL != "" else { return }
-    
-        if let edit = isEdit, let itemReference = groceryItem, edit {
+        
+        if let edit = isEdit, let itemReference = studentItem, edit {
             // Case for editing the item
             itemReference.ref?.updateChildValues([
-                "title" : title,
-                "subtitle" : subtitle,
+                "name" : title,
+                "surname" : subtitle,
                 "imageURL" : imageURL
                 ])
         } else {
             // Case for adding new item
-            let obj = Grocery(title: title, subtitle: subtitle, imageURL: imageURL)
-            self.ref.childByAutoId().setValue(obj.toDictionary())
+            //let obj = Student(name: title, surname: subtitle, imageURL: imageURL)
+            //self.ref.childByAutoId().setValue(obj.toDictionary())
         }
-        navigationController?.popViewController(animated: true)
+        presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func cancelPressed(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
 }
