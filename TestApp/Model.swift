@@ -84,7 +84,6 @@ class Student {
 
 extension Student: Equatable {
     static func == (lhs: Student, rhs: Student) -> Bool {
-        return
-            lhs.values == rhs.values
+        return lhs.values == rhs.values
     }
 }
